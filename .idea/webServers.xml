@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="af818f2c-2399-4633-9f45-dbf46abb015c" name="go语言开发">
+        <fileTransfer rootFolder="/data/go_project" accessType="SFTP" host="10.18.1.27" port="22" sshConfigId="823906f0-4f90-4f2b-8f7f-fcc9cd3b0f40" sshConfig="root@10.18.1.27:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
