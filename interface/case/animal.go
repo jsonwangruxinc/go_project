@@ -1,6 +1,8 @@
 package _case
 
-// 定义接口
+// 声明AnimalI接口
+//
+//	定义AnimalI 行为
 type AnimalI interface {
 	//	吃
 	Each()
