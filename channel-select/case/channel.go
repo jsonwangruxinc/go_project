@@ -1,6 +1,9 @@
 package _case
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 // 协程间通信
 func Communication() {
@@ -47,4 +50,51 @@ func ConcurrentSync() {
 			fmt.Println(i)
 		}
 	}()
+}
+
+// 通知协程退出与多路复用
+func NoticeAndMultiplexing() {
+	//整形通道
+	ch := make(chan int, 0)
+	// 类型通道
+	strCh := make(chan string, 0)
+	//结构通道
+	done := make(chan struct{}, 0)
+	go noticeAndMultiplexingF1(ch)
+	go noticeAndMultiplexingF2(strCh)
+	go noticeAndMultiplexingF3(ch, strCh, done)
+	time.Sleep(5 * time.Second)
+	close(done)
+}
+func noticeAndMultiplexingF1(ch chan<- int) {
+	for i := 1; i < 100; i++ {
+		ch <- i
+	}
+}
+func noticeAndMultiplexingF2(ch chan<- string) {
+	for i := 1; i < 100; i++ {
+		ch <- fmt.Sprintf("数字：%d", i)
+	}
+}
+
+// select子句作为一个整体阻塞，其中任意一个channel准备就绪则继续执行
+func noticeAndMultiplexingF3(ch <-chan int, strCh <-chan string, done <-chan struct{}) {
+	//	定义变量
+	i := 0
+	for {
+		select {
+		case i := <-ch:
+			fmt.Println(i)
+		case str := <-strCh:
+			fmt.Println(str)
+		case <-done:
+			fmt.Println("收到退出通知，退出当前协程")
+			return
+			//有default语句会陷入死循环
+			//default:
+			//	fmt.Println("执行default语句")
+		}
+		i++
+		fmt.Println("累计执行次数：", i)
+	}
 }
