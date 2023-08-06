@@ -1,6 +1,7 @@
 package _case
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -11,7 +12,8 @@ func CopyDirtoDir() {
 	list := getFiles(sourceDir)
 	for _, f := range list {
 		_, name := path.Split(f)
-		destFileName := destDir + "copy/" + name
+		destFileName := destDir + "/copy/" + name
+		fmt.Print(destFileName)
 		//	复制文件
 		CopyFile(f, destFileName)
 	}
