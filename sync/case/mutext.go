@@ -8,7 +8,8 @@ import (
 func MutexCase() {
 	//SingLeRoutine()
 	//multipleRoutine()
-	multipleSafeRoutine()
+	//multipleSafeRoutine()
+	multipleSafeRoutincByRWMutex()
 }
 
 // 单协程操作
@@ -80,4 +81,49 @@ func multipleSafeRoutine() {
 	}
 	wg.Wait()
 	fmt.Println(mp.data)
+}
+
+// 定义读写锁类型
+type cache struct {
+	data map[string]string
+	sync.RWMutex
+}
+
+func NewCache() *cache {
+	return &cache{
+		data:    make(map[string]string),
+		RWMutex: sync.RWMutex{},
+	}
+}
+func (c *cache) Get(key string) string {
+	c.RLock()
+	defer c.RUnlock()
+	value, ok := c.data[key]
+	if ok {
+		return value
+	}
+	return ""
+}
+func (c *cache) Set(key, value string) {
+	c.Lock()
+	defer c.Unlock()
+	c.data[key] = value
+
+}
+func multipleSafeRoutincByRWMutex() {
+	c := NewCache()
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		c.Set("name", "wang")
+	}()
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			fmt.Println(c.Get("name"))
+		}()
+	}
+	wg.Wait()
 }
