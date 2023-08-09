@@ -1,12 +1,39 @@
 package _case
 
 import (
+	"fmt"
+	"log"
 	"math/rand"
 	"sync"
 )
 
 func PoolCase() {
-
+	target := "10.18.1.27"
+	pool, err := GetPool(target)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for i := 1; i < 10; i++ {
+		conn := &Conn{
+			ID:     int64(i),
+			Target: target,
+			Status: ON,
+		}
+		pool.Put(conn)
+	}
+	wg := sync.WaitGroup{}
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for j := 0; j < 5; j++ {
+				conn := pool.Get()
+				fmt.Println(conn.ID)
+				pool.Put(conn)
+			}
+		}()
+	}
+	wg.Wait()
 }
 
 const (
