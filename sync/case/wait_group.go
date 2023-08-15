@@ -61,7 +61,7 @@ func WaitGroupCase1() {
 	close(ch)
 	wg2.Wait()
 	t := time.Since(start)
-	fmt.Println("数据处理时间:", t)
+	fmt.Println("数据处理时长:", t)
 }
 
 func mutil(a, b int) int {
