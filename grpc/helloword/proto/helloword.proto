@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package helloword;
+option go_package ="data/go_project/helloword/proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+
+
+
+service Greeter{
+  //  一元调用
+  rpc SayHello(HelloRequest) returns(HelloReply) {}
+  //  客户端流，上传文件场景
+  rpc SayHelloClientStream(stream HelloRequest) returns (HelloReply){}
+  //  服务端流，下载文件场景
+  rpc SayHelloToWayStream(HelloRequest) returns (stream HelloReply){}
+  //  双向流，机器人服场景一问一答
+}
+enum Gender{
+  //  女的
+  FEMALE = 0;
+  //  男的
+  MALE = 1;
+  //  第三性别
+  THIRD = 2;
+  //  未知
+  UNKNOWN = 3;
+  reserved 4,5;
+}
+message HelloRequest{
+//  [1~15]占一个字符
+  string name = 1;
+  Gender gener =2;
+  uint32 age =3;
+  Address addr =7;
+  google.protobuf.Timestamp birthday = 4;
+  repeated string hobys = 8;
+  map <string,google.protobuf.Any> data = 9;
+  reserved "phone","email";
+  reserved 5, 18 to 50;
+}
+message Address{
+ string proivce =1;
+ string city = 2;
+}
+message HelloReply{
+  string msg =1;
+}
